@@ -1,7 +1,4 @@
-# setup
-import sqlite3
-
-DATABASE_PATH = 'databases/ptcgp.db'
+from utilities import *
 
 # boilerplate code to create the database
 def create_db(db_name, query):

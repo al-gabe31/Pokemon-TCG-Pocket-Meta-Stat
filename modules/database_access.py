@@ -1,6 +1,5 @@
-import sqlite3
+from utilities import *
 
-DATABASE_PATH = 'databases/ptcgp.db'
 
 def get_move(move_name, column_index = -1):
     conn = None

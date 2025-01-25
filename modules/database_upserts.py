@@ -1,6 +1,4 @@
-import sqlite3
-
-DATABASE_PATH = 'databases/ptcgp.db'
+from utilities import *
 
 
 
@@ -28,7 +26,7 @@ MOVE_DEFAULT_BASE_DAMAGE = -10
 MOVE_DEFAULT_COST = '{}'
 MOVE_DEFAULT_EFFECTS = '{"null": "null"}'
 
-def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type = MOVE_DEFAULT_ATTACK_TYPE, base_damage = MOVE_DEFAULT_BASE_DAMAGE, cost = MOVE_DEFAULT_COST, effects = MOVE_DEFAULT_EFFECTS, force_insert = False, force_unique = True):
+def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type = MOVE_DEFAULT_ATTACK_TYPE, base_damage = MOVE_DEFAULT_BASE_DAMAGE, cost = MOVE_DEFAULT_COST, effects = MOVE_DEFAULT_EFFECTS, force_insert = False, force_unique = True, debug = False):
     conn = None
     cursor = None
 
@@ -44,6 +42,9 @@ def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type =
         if force_insert == True and force_unique == True and num_counts > 0:
             # trying to insert a unique but the move already exists
             print(f'Move {move_name} already exists in move database')
+
+            if debug:
+                move_list_copies(move_name)
             return # exits the function
         elif force_insert == False and force_unique == True and num_counts > 1:
             # trying to modify a move but there are multiple copies

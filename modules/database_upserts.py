@@ -119,7 +119,7 @@ ABILITY_DEFAULT_ACTIVE_REQ = '{"null": "null"}'
 ABILITY_DEFAULT_REPEATABLE = -1
 ABILITY_DEFAULT_EFFECTS = '{"null": "null"}'
 
-def ability_upsert(ability_name, description = ABILITY_DEFAULT_DESCRIPTION, activable = ABILITY_DEFAULT_ACTIVABLE, active_req = ABILITY_DEFAULT_ACTIVE_REQ, repeatable = ABILITY_DEFAULT_REPEATABLE, effects = ABILITY_DEFAULT_EFFECTS, force_insert = False, force_unique = True):
+def ability_upsert(ability_name, description = ABILITY_DEFAULT_DESCRIPTION, activable = ABILITY_DEFAULT_ACTIVABLE, active_req = ABILITY_DEFAULT_ACTIVE_REQ, repeatable = ABILITY_DEFAULT_REPEATABLE, effects = ABILITY_DEFAULT_EFFECTS, force_insert = False, force_unique = True, debug = False):
     conn = None
     cursor = None
 
@@ -135,6 +135,9 @@ def ability_upsert(ability_name, description = ABILITY_DEFAULT_DESCRIPTION, acti
         if force_insert == True and force_unique == True and num_counts > 0:
             # trying to insert a unique but the ability already exists
             print(f'Ability {ability_name} already exists in ability database')
+
+            if debug:
+                ability_list_copies(ability_name)
             return # exits the function
         elif force_insert == False and force_unique == True and num_counts > 1:
             # trying to modify an ability but there are multiple copies

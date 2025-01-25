@@ -1,5 +1,7 @@
 import sqlite3
 
+DATABASE_PATH = 'databases/ptcgp.db'
+
 
 
 # PLAYER UPSERT
@@ -8,7 +10,7 @@ def player_upsert():
     cursor = None
 
     
-    conn = sqlite3.connect('../databases/ptcgp.db')
+    conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
 
     cursor.execute('insert into player default values')
@@ -31,7 +33,7 @@ def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type =
     cursor = None
 
     try:
-        conn = sqlite3.connect('../databases/ptcgp.db')
+        conn = sqlite3.connect(DATABASE_PATH)
         cursor = conn.cursor()
 
         action_type = '' # we need to know whether we're going to be inserting or updating a record into the table
@@ -118,7 +120,7 @@ def ability_upsert(ability_name, description = ABILITY_DEFAULT_DESCRIPTION, acti
     cursor = None
 
     try:
-        conn = sqlite3.connect('../databases/ptcgp.db')
+        conn = sqlite3.connect(DATABASE_PATH)
         cursor = conn.cursor()
 
         action_type = '' # we need to know whether we're going to be inserting or updating a record into the table

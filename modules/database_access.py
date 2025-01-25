@@ -1,11 +1,13 @@
 import sqlite3
 
+DATABASE_PATH = 'databases/ptcgp.db'
+
 def get_move(move_name, column_index = -1):
     conn = None
     cursor = None
 
     try:
-        conn = sqlite3.connect('databases/ptcgp.db')
+        conn = sqlite3.connect(DATABASE_PATH)
         cursor = conn.cursor()
 
         # fetching the move in the database

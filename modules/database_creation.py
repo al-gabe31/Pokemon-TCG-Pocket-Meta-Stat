@@ -1,9 +1,11 @@
 # setup
 import sqlite3
 
+DATABASE_PATH = 'databases/ptcgp.db'
+
 # boilerplate code to create the database
 def create_db(db_name, query):
-    conn = sqlite3.connect(f'../databases/ptcgp.db')
+    conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
 
     try:

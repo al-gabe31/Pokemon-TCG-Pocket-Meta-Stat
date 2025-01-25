@@ -1,2 +1,4 @@
 test_ground/
 example.db
+modules/main.py
+modules/__pycache__

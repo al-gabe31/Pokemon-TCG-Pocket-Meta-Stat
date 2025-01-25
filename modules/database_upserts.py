@@ -44,18 +44,18 @@ def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type =
         if force_insert == True and force_unique == True and num_counts > 0:
             # trying to insert a unique but the move already exists
             print(f'Move {move_name} already exists in move database')
-            return # exists the function
+            return # exits the function
         elif force_insert == False and force_unique == True and num_counts > 1:
             # trying to modify a move but there are multiple copies
             print(f'Move {move_name} has {num_counts} copies! Use move_modify function to edit a specific one instead.')
-            return # exists the function
+            return # exits the function
         elif force_insert == False and force_unique == True and num_counts == 1:
             # updating the only existing copy of a move
             action_type = 'upsert'
         elif attack_type == MOVE_DEFAULT_ATTACK_TYPE or base_damage == MOVE_DEFAULT_BASE_DAMAGE or cost == MOVE_DEFAULT_COST or effects == MOVE_DEFAULT_EFFECTS:
             # trying to insert but not all parameters are provided
             print('All parameters need to be populated in order to insert into move database')
-            return # exists the function
+            return # exits the function
         else:
             # inserting new move into the table
             action_type = 'insert'
@@ -128,28 +128,34 @@ def ability_upsert(ability_name, description = ABILITY_DEFAULT_DESCRIPTION, acti
 
         action_type = '' # we need to know whether we're going to be inserting or updating a record into the table
         cursor.execute(f'select count(*) from ability where ability_name = \"{ability_name}\"')
-        num_records = cursor.fetchall()[0][0]
+        num_counts = cursor.fetchall()[0][0]
 
-        if num_records > 0:
+        # deciding on action type (insert, upsert, or error case)
+        if force_insert == True and force_unique == True and num_counts > 0:
+            # trying to insert a unique but the ability already exists
+            print(f'Ability {ability_name} already exists in ability database')
+            return # exits the function
+        elif force_insert == False and force_unique == True and num_counts > 1:
+            # trying to modify an ability but there are multiple copies
+            print(f'Ability {ability_name} has {num_counts} copies! Use ability_modify function to edit a specific one instead.')
+            return # exits the function
+        elif force_insert == False and force_unique == True and num_counts == 1:
+            # updating the only existing copy of an ability
             action_type = 'upsert'
+        elif activable == ABILITY_DEFAULT_ACTIVABLE or active_req == ABILITY_DEFAULT_ACTIVE_REQ or repeatable == ABILITY_DEFAULT_REPEATABLE or effects == ABILITY_DEFAULT_EFFECTS:
+            # trying to insert but not all parameters are provided
+            print('All parameters need to be populated in order to insert into ability database')
+            return # exits the function
         else:
+            # inserting new ability into the table
             action_type = 'insert'
 
-        # action type is insert but not all parameters are populated (except description)
-        if action_type == 'insert' and (activable == ABILITY_DEFAULT_ACTIVABLE or active_req == ABILITY_DEFAULT_ACTIVE_REQ or repeatable == ABILITY_DEFAULT_REPEATABLE or effects == ABILITY_DEFAULT_EFFECTS):
-            print ('All parameters need to be populated in order to insert into ability.db')
-            return # exits the function
-
-        # action type is insert and all parameters are populated
-        if action_type == 'insert' and not (activable == ABILITY_DEFAULT_ACTIVABLE or active_req == ABILITY_DEFAULT_ACTIVE_REQ or repeatable == ABILITY_DEFAULT_REPEATABLE or effects == ABILITY_DEFAULT_EFFECTS):
-            print('F1')
+        if action_type == 'insert':
             cursor.execute(f'''
                 insert into ability(ability_name, description, activable, active_req, repeatable, effects)
                 values (\'{ability_name}\', \'{description}\', {activable}, \'{active_req}\', {repeatable}, \'{effects}\')
             ''')
-
-        # action type is upsert and force insert is false
-        if action_type == 'upsert' and force_insert == False:
+        elif action_type == 'upsert':
             # first getting current values for each attribute
             cursor.execute(f'select * from ability where ability_name = \"{ability_name}\"')
             result = cursor.fetchall()[0]
@@ -181,11 +187,6 @@ def ability_upsert(ability_name, description = ABILITY_DEFAULT_DESCRIPTION, acti
                     repeatable = {curr_repeatable},
                     effects = \'{curr_effects}\'
             ''')
-
-        # action type is upsert and force insert is true
-        if action_type == 'upsert' and force_insert == True:
-            print(f'Ability {ability_name} already in ability.db')
-            return # exits the function
 
         conn.commit()
     except Exception as e:

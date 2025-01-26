@@ -1,6 +1,20 @@
 import sqlite3
+import json
 
 DATABASE_PATH = 'databases/ptcgp.db'
+
+valid_types = [
+    'grass',
+    'fire',
+    'water',
+    'lightning',
+    'fighting',
+    'psychic',
+    'colorless',
+    'darkness',
+    'metal',
+    'dragon'
+]
 
 
 

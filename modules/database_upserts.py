@@ -28,10 +28,23 @@ MOVE_DEFAULT_EFFECTS = '{"null": "null"}'
 def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, base_damage = MOVE_DEFAULT_BASE_DAMAGE, cost = MOVE_DEFAULT_COST, effects = MOVE_DEFAULT_EFFECTS, force_insert = False, force_unique = True, debug = False):
     conn = None
     cursor = None
+    cost_error = False
 
     try:
         conn = sqlite3.connect(DATABASE_PATH)
         cursor = conn.cursor()
+
+        # Enforcing cost integrity
+        cost_dict = json.loads(cost)
+        passed_cost_test = True
+
+        for move_type in cost_dict:
+            if move_type not in valid_types:
+                passed_cost_test = False
+
+        if passed_cost_test == False:
+            raise ValueError('Invalid cost passed. Make sure all cost types are valid')
+            return # exits the function
 
         action_type = '' # we need to know whether we're going to be inserting or updating a record into the table
         cursor.execute(f'select count(*) from move where move_name = \"{move_name}\"')

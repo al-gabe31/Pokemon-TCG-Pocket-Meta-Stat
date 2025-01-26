@@ -8,7 +8,7 @@ MOVE_DEFAULT_BASE_DAMAGE = -10
 MOVE_DEFAULT_COST = '{}'
 MOVE_DEFAULT_EFFECTS = '{"null": "null"}'
 
-def get_move(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type = MOVE_DEFAULT_ATTACK_TYPE, base_damage = MOVE_DEFAULT_BASE_DAMAGE, cost = MOVE_DEFAULT_COST, effects = MOVE_DEFAULT_EFFECTS):
+def get_move(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type = MOVE_DEFAULT_ATTACK_TYPE, base_damage = MOVE_DEFAULT_BASE_DAMAGE, cost = MOVE_DEFAULT_COST, effects = MOVE_DEFAULT_EFFECTS, debug = False):
     conn = None
     cursor = None
 
@@ -42,12 +42,13 @@ def get_move(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type = MO
         # no copies of the move found
         if len(result) == 0:
             print(f'No copies of the move {move_name} was found with the given parameters.')
-            return -1
         
         # multiple copies of the move found
-        if len(result) > 1:
+        elif len(result) > 1:
             print(f'{len(result)} copies of the move {move_name} was found. Please be more specific.')
-            return -1
+
+            if debug:
+                move_list_copies(move_name)
         
         # found 1 copy of a move
         else:

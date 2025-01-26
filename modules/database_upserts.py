@@ -21,12 +21,11 @@ def player_upsert():
 # MOVE UPSERT
 # PARAMETER DEFAULT VALUES
 MOVE_DEFAULT_DESCRIPTION = '' # (okay if it's empty)
-MOVE_DEFAULT_ATTACK_TYPE = ''
 MOVE_DEFAULT_BASE_DAMAGE = -10
 MOVE_DEFAULT_COST = '{}'
 MOVE_DEFAULT_EFFECTS = '{"null": "null"}'
 
-def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type = MOVE_DEFAULT_ATTACK_TYPE, base_damage = MOVE_DEFAULT_BASE_DAMAGE, cost = MOVE_DEFAULT_COST, effects = MOVE_DEFAULT_EFFECTS, force_insert = False, force_unique = True, debug = False):
+def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, base_damage = MOVE_DEFAULT_BASE_DAMAGE, cost = MOVE_DEFAULT_COST, effects = MOVE_DEFAULT_EFFECTS, force_insert = False, force_unique = True, debug = False):
     conn = None
     cursor = None
 
@@ -53,7 +52,7 @@ def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type =
         elif force_insert == False and force_unique == True and num_counts == 1:
             # updating the only existing copy of a move
             action_type = 'upsert'
-        elif attack_type == MOVE_DEFAULT_ATTACK_TYPE or base_damage == MOVE_DEFAULT_BASE_DAMAGE or cost == MOVE_DEFAULT_COST or effects == MOVE_DEFAULT_EFFECTS:
+        elif base_damage == MOVE_DEFAULT_BASE_DAMAGE or cost == MOVE_DEFAULT_COST or effects == MOVE_DEFAULT_EFFECTS:
             # trying to insert but not all parameters are provided
             print('All parameters need to be populated in order to insert into move database')
             return # exits the function
@@ -63,24 +62,21 @@ def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type =
 
         if action_type == 'insert':
             cursor.execute(f'''
-                insert into move (move_name, description, attack_type, base_damage, cost, effects)
-                values (\'{move_name}\', \'{description}\', \'{attack_type}\', {base_damage}, \'{cost}\', \'{effects}\')
+                insert into move (move_name, description, base_damage, cost, effects)
+                values (\'{move_name}\', \'{description}\', {base_damage}, \'{cost}\', \'{effects}\')
             ''')
         elif action_type == 'upsert':
             # first getting current values for each attribute
             cursor.execute(f'select * from move where move_name = \"{move_name}\"')
             result = cursor.fetchall()[0]
             curr_description = result[2]
-            curr_attack_type = result[3]
-            curr_base_damage = result[4]
-            curr_cost = result[5]
-            curr_effects = result[6]
+            curr_base_damage = result[3]
+            curr_cost = result[4]
+            curr_effects = result[5]
 
             # only update the attributes we specified
             if description != MOVE_DEFAULT_DESCRIPTION:
                 curr_description = description
-            if attack_type != MOVE_DEFAULT_ATTACK_TYPE:
-                curr_attack_type = attack_type
             if base_damage != MOVE_DEFAULT_BASE_DAMAGE:
                 curr_base_damage = base_damage
             if cost != MOVE_DEFAULT_COST:
@@ -93,7 +89,6 @@ def move_upsert(move_name, description = MOVE_DEFAULT_DESCRIPTION, attack_type =
                 update move
                 set
                     description = \'{curr_description}\',
-                    attack_type = \'{curr_attack_type}\',
                     base_damage = {curr_base_damage},
                     cost = \'{curr_cost}\',
                     effects = \'{curr_effects}\'
@@ -218,8 +213,5 @@ POKEMON_DEFAULT_RETREAT_COST = -1
 
 def pokemon_upsert(pokemon_name, pokemon_type, is_ex, base_hp, stage, evolution_name, move_1, move_2, ability, weakness, retreat_cost):
     pass
-
-# COMING BACK!!!
-# Fix move typings. A move's type is determined by the pokemon's type, not the energy it uses.
 
 # END OF FILE

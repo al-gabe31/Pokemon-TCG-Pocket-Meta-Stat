@@ -24,9 +24,9 @@ def move_list_copies(move_name):
         
         # printing all copies of the current move
         for move in copies:
-            move_id, move_name, description, attack_type, base_damage, cost, effects = move
+            move_id, move_name, description, base_damage, cost, effects = move
 
-            print(f'[MOVE_ID # {move_id}] {move_name}\n\tDescription: {description}\n\tAttack Type: {attack_type}\n\tBase Damage: {base_damage}\n\tCost: {cost}\n\tEffects: {effects}\n')
+            print(f'[MOVE_ID # {move_id}] {move_name}\n\tDescription: {description}\n\tBase Damage: {base_damage}\n\tCost: {cost}\n\tEffects: {effects}\n')
     except Exception as e:
         print(f'SQL ERROR - {e}')
     finally:

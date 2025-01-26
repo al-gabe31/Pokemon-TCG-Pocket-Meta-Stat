@@ -203,4 +203,23 @@ def ability_upsert(ability_name, description = ABILITY_DEFAULT_DESCRIPTION, acti
 
 
 
+# POKEMON UPSERT
+# PARAMETER DEFAULT VALUES
+POKEMON_DEFAULT_TYPE = ''
+POKEMON_DEFAULT_IS_EX = -1
+POKEMON_DEFAULT_BASE_HP = -10
+POKEMON_DEFAULT_STAGE = ''
+POKEMON_DEFAULT_EVOLUTION_NAME = ''
+POKEMON_DEFAULT_MOVE_1 = -1
+POKEMON_DEFAULT_MOVE_2 = -1
+POKEMON_DEFAULT_ABILITY = -1
+POKEMON_DEFAULT_WEAKNESS = ''
+POKEMON_DEFAULT_RETREAT_COST = -1
+
+def pokemon_upsert(pokemon_name, pokemon_type, is_ex, base_hp, stage, evolution_name, move_1, move_2, ability, weakness, retreat_cost):
+    pass
+
+# COMING BACK!!!
+# Fix move typings. A move's type is determined by the pokemon's type, not the energy it uses.
+
 # END OF FILE

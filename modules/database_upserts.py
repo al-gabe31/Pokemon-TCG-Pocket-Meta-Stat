@@ -234,7 +234,7 @@ POKEMON_DEFAULT_TYPE = ''
 POKEMON_DEFAULT_IS_EX = -1
 POKEMON_DEFAULT_BASE_HP = -10
 POKEMON_DEFAULT_STAGE = ''
-POKEMON_DEFAULT_EVOLUTION_NAME = ''
+POKEMON_DEFAULT_EVOLUTION_NAME = 'None'
 POKEMON_DEFAULT_MOVE_1_ID = -1
 POKEMON_DEFAULT_MOVE_2_ID = -1
 POKEMON_DEFAULT_ABILITY_ID = -1
@@ -297,7 +297,7 @@ def pokemon_upsert(
         evolution_matches = cursor.fetchall()[0][0]
 
         # error only if there were no evolution matches & evolution parameter was provided (ie not equal to default evolution)
-        if evolution_matches == 0 and evolution_name != POKEMON_DEFAULT_EVOLUTION_NAME:
+        if evolution_matches == 0 and evolution_name != POKEMON_DEFAULT_EVOLUTION_NAME and evolution_name != '':
             print(f'Evolution pokemon {evolution_name} not found')
             return # exits the function
 

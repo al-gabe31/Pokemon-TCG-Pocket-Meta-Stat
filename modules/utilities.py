@@ -122,7 +122,7 @@ def pokemon_card_list_copies(pokemon_name, display_id_names = False):
                     ability_name = cursor.fetchall()[0][0]
 
                 # printing our information
-                print(f'[POKEMON_ID # {pokemon_id}] {pokemon_name}\n\tCard ID: {card_id}\n\tPokemon Type: {pokemon_type}\n\tIs EX: {is_ex}\n\tBase HP: {base_hp}\n\tStage: {stage}\n\tEvolution Name: {evolution_name}\n\Move 1: {move_1_name   }\n\tMove 2: {move_2_name}\n\tAbility: {ability_name}\n\tWeakness: {weakness}\n\tRetreat Cost: {retreat_cost}\n')
+                print(f'[POKEMON_ID # {pokemon_id}] {pokemon_name}\n\tCard ID: {card_id}\n\tPokemon Type: {pokemon_type}\n\tIs EX: {is_ex}\n\tBase HP: {base_hp}\n\tStage: {stage}\n\tEvolution Name: {evolution_name}\n\tMove 1: {move_1_name   }\n\tMove 2: {move_2_name}\n\tAbility: {ability_name}\n\tWeakness: {weakness}\n\tRetreat Cost: {retreat_cost}\n')
                 return
 
             print(f'[POKEMON_ID # {pokemon_id}] {pokemon_name}\n\tCard ID: {card_id}\n\tPokemon Type: {pokemon_type}\n\tIs EX: {is_ex}\n\tBase HP: {base_hp}\n\tStage: {stage}\n\tEvolution Name: {evolution_name}\n\tMove 1 ID: {move_1_id}\n\tMove 2 ID: {move_2_id}\n\tAbility ID: {ability_id}\n\tWeakness: {weakness}\n\tRetreat Cost: {retreat_cost}\n')

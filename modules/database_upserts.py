@@ -267,7 +267,7 @@ def pokemon_upsert(
         print(f'ERROR - Inserting basic pokemon with an evolution')
         return
     if stage != 'basic' and evolution_name == '':
-        print(f'ERROR - Inserting non basisc pokemon without an evolution')
+        print(f'ERROR - Inserting non basic pokemon without an evolution')
         return
 
     try:

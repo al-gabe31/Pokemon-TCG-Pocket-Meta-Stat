@@ -261,6 +261,15 @@ def pokemon_upsert(
     conn = None
     cursor = None
 
+    # Pokemon stage & evolution have to be consistent
+    # ie. basic pokemon cannot have an evolution
+    if stage == 'basic' and evolution_name != '':
+        print(f'ERROR - Inserting basic pokemon with an evolution')
+        return
+    if stage != 'basic' and evolution_name == '':
+        print(f'ERROR - Inserting non basisc pokemon without an evolution')
+        return
+
     try:
         conn = sqlite3.connect(DATABASE_PATH)
         cursor = conn.cursor()

@@ -344,6 +344,68 @@ def pokemon_upsert(
                 insert into pokemon_card(card_id, pokemon_name, pokemon_type, is_ex, base_hp, stage, evolution_name, weakness, retreat_cost{additional_insert})
                 values({card_id}, '{pokemon_name}', '{pokemon_type}', {is_ex}, {base_hp}, '{stage}', '{evolution_name}', '{weakness}', {retreat_cost}{additional_values})
             ''')
+        elif action_type == 'upsert':
+            # first getting current values for each attribute
+            cursor.execute(f'select * from pokemon_card where pokemon_name = \"{pokemon_name}\"')
+            result = cursor.fetchall()[0]
+            curr_pokemon_type = result[3]
+            curr_is_ex = result[4]
+            curr_base_hp = result[5]
+            curr_stage = result[6]
+            curr_evolution_name = result[7]
+            curr_move_1_id = result[8]
+            curr_move_2_id = result[9]
+            curr_ability_id = result[10]
+            curr_weakness = result[11]
+            curr_retreat_cost = result[12]
+
+            # only update the attributes we specified
+            if pokemon_type != POKEMON_DEFAULT_TYPE:
+                curr_pokemon_type = pokemon_type
+            if is_ex != POKEMON_DEFAULT_IS_EX:
+                curr_is_ex = is_ex
+            if base_hp != POKEMON_DEFAULT_BASE_HP:
+                curr_base_hp = base_hp
+            if stage != POKEMON_DEFAULT_STAGE:
+                curr_stage = stage
+            if evolution_name != POKEMON_DEFAULT_EVOLUTION_NAME:
+                curr_evolution_name = evolution_name
+            if move_1_id != POKEMON_DEFAULT_MOVE_1_ID:
+                curr_move_1_id = move_1_id
+            if move_2_id != POKEMON_DEFAULT_MOVE_2_ID:
+                curr_move_2_id = move_2_id
+            if ability_id != POKEMON_DEFAULT_ABILITY_ID:
+                curr_ability_id = ability_id
+            if weakness != POKEMON_DEFAULT_WEAKNESS:
+                curr_weakness = weakness
+            if retreat_cost != POKEMON_DEFAULT_RETREAT_COST:
+                curr_retreat_cost = retreat_cost
+
+            # performing data validation
+            # making sure the new values make sense
+            # 1. evolution name has to already exist in the pokemon_card table
+            cursor.execute(f'select count(*) from pokemon_card where pokemon_name = \"{evolution_name}\"')
+            num_found = cursor.fetchall()[0][0]
+
+            if num_found <= 0: # evolution name not found
+                raise ValueError(f'{pokemon_name} can\'t evolution from {evolution_name} because that pokemon doesn\'t exist.')
+            
+            # ready to update row
+            # hoping that the table constraints perform data validation on the rest
+            cursor.execute(f'''
+                update pokemon_card
+                set
+                    pokemon_type = \"{curr_pokemon_type}\",
+                    is_ex = {curr_is_ex},
+                    base_hp = {curr_base_hp},
+                    stage = \"{curr_stage}\",
+                    evolution_name = \"{curr_evolution_name}\",
+                    move_1_id = {curr_move_1_id},
+                    move_2_id = {curr_move_2_id},
+                    ability_id = {curr_ability_id},
+                    weakness = \"{curr_weakness}\",
+                    retreat_cost = {curr_retreat_cost}
+            ''')
 
         conn.commit() # committing transaction
     except Exception as e:

@@ -392,19 +392,29 @@ def pokemon_upsert(
             
             # ready to update row
             # hoping that the table constraints perform data validation on the rest
+
+            # we have to be mindful that move/ability id can either be an integer or None
+            # only include move/ability in the query so long as an update is requested
+            additional_id_statement = ''
+            if move_1_id is not None and move_1_id != -1:
+                additional_id_statement += f', move_1_id = {curr_move_1_id}'
+            if move_2_id is not None and move_2_id != -1:
+                additional_id_statement += f', move_2_id = {curr_move_2_id}'
+            if ability_id is not None and ability_id != -1:
+                additional_id_statement += f', ability_id = {curr_ability_id}'
+
             cursor.execute(f'''
                 update pokemon_card
                 set
-                    pokemon_type = \"{curr_pokemon_type}\",
+                    pokemon_type = \'{curr_pokemon_type}\',
                     is_ex = {curr_is_ex},
                     base_hp = {curr_base_hp},
-                    stage = \"{curr_stage}\",
-                    evolution_name = \"{curr_evolution_name}\",
-                    move_1_id = {curr_move_1_id},
-                    move_2_id = {curr_move_2_id},
-                    ability_id = {curr_ability_id},
-                    weakness = \"{curr_weakness}\",
+                    stage = \'{curr_stage}\',
+                    evolution_name = \'{curr_evolution_name}\',
+                    weakness = \'{curr_weakness}\',
                     retreat_cost = {curr_retreat_cost}
+                    {additional_id_statement}
+                where pokemon_name = \'{pokemon_name}\'
             ''')
 
         conn.commit() # committing transaction

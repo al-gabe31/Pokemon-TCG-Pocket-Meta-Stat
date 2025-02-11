@@ -390,6 +390,14 @@ def pokemon_upsert(
             if num_found <= 0: # evolution name not found
                 raise ValueError(f'{pokemon_name} can\'t evolution from {evolution_name} because that pokemon doesn\'t exist.')
             
+            # 2. stage & evolution are consistent
+            if curr_stage == 'basic' and curr_evolution_name != '':
+                print(f'ERROR - Inserting basic pokemon with an evolution')
+                return
+            if curr_stage != 'basic' and curr_evolution_name == '':
+                print(f'ERROR - Inserting non basic pokemon without an evolution')
+                return
+            
             # ready to update row
             # hoping that the table constraints perform data validation on the rest
 
